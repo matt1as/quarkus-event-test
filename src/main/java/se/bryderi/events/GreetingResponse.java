@@ -1,13 +1,31 @@
 package se.bryderi.events;
 
-public class GreetingResponse {
-    private String greeting;
+import java.util.ArrayList;
+import java.util.List;
 
-    public String getGreeting() {
-        return this.greeting;
+public class GreetingResponse {
+
+    private List<Greeting> greetings = new ArrayList<Greeting>();
+
+
+    public List<Greeting> getGreetings() {
+        return this.greetings;
     }
 
-    public void setTitle(String greeting) {
-        this.greeting = greeting;
+    public void setGreetings(List<Greeting> greetings) {
+        this.greetings = greetings;
+    }
+    
+    public static class Greeting {
+        private String name;
+         
+        public String getName() {
+            return this.name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
     }
 }

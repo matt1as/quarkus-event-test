@@ -1,8 +1,6 @@
 
 package se.bryderi.service;
 
-import java.util.List;
-
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
@@ -15,6 +13,8 @@ import io.vertx.mutiny.core.eventbus.EventBus;
 import io.vertx.mutiny.core.eventbus.Message;
 import se.bryderi.events.GreetingRequest;
 import se.bryderi.events.GreetingResponse;
+import se.bryderi.events.GreetingResponse.Greeting;
+
 
 @ApplicationScoped
 @GraphQLApi
@@ -26,6 +26,7 @@ public class GreetingService {
     @Query
     public Uni<GreetingResponse> getGreeting(String name) {
         GreetingRequest query = new GreetingRequest();
+       
         query.setName(name);
         Uni<GreetingResponse> result = bus.<GreetingResponse>request("greeting.query", query).onItem()
                 .transform(Message::body);
@@ -34,10 +35,12 @@ public class GreetingService {
     }
 
     @ConsumeEvent("greeting.query")
-    public GreetingResponse query(GreetingRequest query) {
+    public GreetingResponse onGreetingQuery(GreetingRequest query) {
         
         GreetingResponse response = new GreetingResponse();
-        response.setTitle("Hello " + query.getName());
+        Greeting greeting = new Greeting();
+        greeting.setName("Hello " + query.getName());
+        response.getGreetings().add( greeting );
 
         return response;
     }
