@@ -24,21 +24,22 @@ public class GreetingService {
     EventBus bus;
 
     @Query
-    public Uni<GreetingResponse> getGreeting(String name) {
+    public Uni<List<GreetingResponse>> getGreeting(String name) {
         GreetingRequest query = new GreetingRequest();
         query.setName(name);
-        Uni<GreetingResponse> result = bus.<GreetingResponse>request("greeting.query", query).onItem()
+        Uni<List<GreetingResponse>> result = bus.<List<GreetingResponse>>request("greeting.query", query).onItem()
                 .transform(Message::body);
         return result;
 
     }
 
     @ConsumeEvent("greeting.query")
-    public GreetingResponse query(GreetingRequest query) {
+    public List<GreetingResponse> query(GreetingRequest query) {
         
         GreetingResponse response = new GreetingResponse();
         response.setTitle("Hello " + query.getName());
+        List<GreetingResponse> greetings = List.of(response);
 
-        return response;
+        return greetings;
     }
 }
